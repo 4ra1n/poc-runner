@@ -114,7 +114,7 @@ func execRule(poc *base.POC, key string, rule *base.Rule) (expression.EValue, er
 		}
 		if cachedResp == nil {
 			// if cache is null
-			// do reqeust
+			// do request
 			theResp, err = poc.DoReq(theReq)
 			if err != nil {
 				return nil, xerr.Wrap(err)

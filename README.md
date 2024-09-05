@@ -16,15 +16,13 @@
 
 XRAY POC RUNNER (Open Source Version)
 
-为什么要做这个项目:
+这是一个 `XRAY` 的 `YAML` 开源执行器（虽然网上已经有很多个开源实现了）
 
-- `XRAY` 语法需要一个完整的 **开源** 的实现
-- `XPOC` 和 `XRAY` 较重需要一个更轻量的实现
+可执行文件体积非常小（例如 `windows-amd64` 仅 `2 MB`）
 
 主要特性:
 
 - 完全开源（所有代码开源不存在闭源二进制文件）
-- 可执行文件体积非常小（例如 `windows-amd64` 仅 `3MB`）
 - 无需复杂的 `yaml` 配置文件且命令行参数尽可能简化
 - 完全不使用 `google/cel` 库（使用底层 `antlr` 实现更轻量的表达式解析）
 - 完全不使用 `net/http` 库（使用 `net.Dial` 从零实现 `raw http client`）
@@ -175,3 +173,10 @@ reverse function
 | weblogic-ssrf.yml                              | ✅      | /       |
 | zabbix-cve-2016-10134-sqli.yml                 | ✅      | /       |
 
+## Star
+
+<div align="center">
+
+<img src="https://api.star-history.com/svg?repos=4ra1n/poc-runner&type=Date" width="600" height="400" alt="Star History Chart" valign="middle">
+
+</div>
