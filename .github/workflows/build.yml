@@ -1,0 +1,53 @@
+name: golang build
+
+on:
+  push:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: set version
+        run: |
+          echo "VERSION=0.0.1" >> $GITHUB_ENV
+          NOW=$(date +"%Y/%m/%d/%H/%M")
+          echo "NOW=$NOW" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+      - name: set up go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.0'
+
+      - name: build gox
+        run: |
+          set -x
+          cd gox
+          go build -o ../cmd/my-gox
+
+      - name: build poc-runner
+        run: |
+          set -x 
+          mkdir build
+          cd cmd
+          ./my-gox -osarch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 linux/arm linux/arm64 windows/arm windows/arm64 windows/386 windows/amd64 freebsd/386 freebsd/amd64 freebsd/arm openbsd/386 openbsd/amd64 openbsd/arm solaris/amd64" -ldflags="-extldflags=-static -s -w -X main.version=${{ env.VERSION }} -X main.now=${{ env.NOW }}" -output="../build/poc-runner-${{ env.VERSION }}-{{.OS}}-{{.Arch}}"
+
+      - name: create build file
+        run: |
+          set -eux
+          UPX_VERSION=4.2.4
+          UPX_FULL=upx-${UPX_VERSION}-amd64_linux.tar.xz
+          cp bin/${UPX_FULL} ./${UPX_FULL}
+          tar -xf ${UPX_FULL}
+          chmod +x upx-${UPX_VERSION}-amd64_linux/upx
+          export PATH="$PWD/upx-${UPX_VERSION}-amd64_linux:$PATH"
+          find build -type f -exec upx {} \;
+          zip -r "build-${{ env.VERSION }}.zip" build/*
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: build-${{ env.VERSION }}.zip

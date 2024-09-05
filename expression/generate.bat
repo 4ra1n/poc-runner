@@ -1,0 +1,1 @@
+"C:\Program Files\Java\jdk-17\bin\java.exe" -jar antlr-4.13.2-complete.jar -Dlanguage=Go -package expression Expression.g4

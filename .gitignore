@@ -1,0 +1,7 @@
+.idea/
+/build/
+/target/
+*.exe
+*.yml
+*.yaml
+token.txt
