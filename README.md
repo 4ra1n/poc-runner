@@ -12,6 +12,8 @@
 ![](https://github.com/4ra1n/poc-runner/workflows/gitleaks%20check/badge.svg)
 ![](https://github.com/4ra1n/poc-runner/workflows/truffle%20check/badge.svg)
 
+[前往下载](https://github.com/4ra1n/poc-runner/releases)
+
 ## DESC
 
 XRAY POC RUNNER (Open Source Version)
