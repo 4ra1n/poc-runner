@@ -24,7 +24,7 @@ REM BUILD GOX
 CD gox
 go build -o ..\cmd\gox.exe
 CD ..\cmd
-gox.exe -osarch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 linux/arm linux/arm64 windows/arm windows/arm64 windows/386 windows/amd64 freebsd/386 freebsd/amd64 freebsd/arm openbsd/386 openbsd/amd64 openbsd/arm solaris/amd64" -ldflags="-extldflags=-static -s -w -X main.version=%VERSION% -X main.now=%NOW%" -output="../build/poc-runner-%VERSION%-{{.OS}}-{{.Arch}}"
+gox.exe -osarch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 linux/arm linux/arm64 windows/arm windows/arm64 windows/386 windows/amd64" -ldflags="-extldflags=-static -s -w -X main.version=%VERSION% -X main.now=%NOW%" -output="../build/poc-runner-%VERSION%-{{.OS}}-{{.Arch}}"
 DEL gox.exe
 CD ..
 ECHO [*] POC RUNNER BUILD FINISH

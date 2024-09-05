@@ -32,7 +32,7 @@ jobs:
           set -x 
           mkdir build
           cd cmd
-          ./my-gox -osarch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 linux/arm linux/arm64 windows/arm windows/arm64 windows/386 windows/amd64 freebsd/386 freebsd/amd64 freebsd/arm openbsd/386 openbsd/amd64 openbsd/arm solaris/amd64" -ldflags="-extldflags=-static -s -w -X main.version=${{ env.VERSION }} -X main.now=${{ env.NOW }}" -output="../build/poc-runner-${{ env.VERSION }}-{{.OS}}-{{.Arch}}"
+          ./my-gox -osarch="darwin/arm64 darwin/amd64 linux/386 linux/amd64 linux/arm linux/arm64 windows/arm windows/arm64 windows/386 windows/amd64" -ldflags="-extldflags=-static -s -w -X main.version=${{ env.VERSION }} -X main.now=${{ env.NOW }}" -output="../build/poc-runner-${{ env.VERSION }}-{{.OS}}-{{.Arch}}"
 
       - name: create build file
         run: |
