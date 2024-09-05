@@ -35,6 +35,24 @@ XRAY POC RUNNER (Open Source Version)
 
 `POC` 仓库: https://github.com/chaitin/xray/tree/master/pocs
 
+## Quick Start
+
+基础使用 `poc-runner -r [poc].yml -t [target]`
+
+![](img/001.png)
+
+加入 `-debug` 打印所有请求响应
+
+![](img/002.png)
+
+加入 `-proxy` 参数启动代理
+
+![](img/003.png)
+
+报错信息详细完善
+
+![](img/004.png)
+
 ## BUILD
 
 WINDOWS: 参考 `build.bat`
