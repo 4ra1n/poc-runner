@@ -20,7 +20,7 @@ XRAY POC RUNNER (Open Source Version)
 
 这是一个 `XRAY` 的 `YAML` 开源执行器（虽然网上已经有很多个开源实现了）
 
-可执行文件体积非常小（例如 `windows-amd64` 仅 `2 MB`）
+可执行文件体积 **非常小**（例如 `windows-amd64` 仅 `2 MB`）
 
 主要特性:
 
@@ -31,7 +31,7 @@ XRAY POC RUNNER (Open Source Version)
 
 反连内置了 `dnslog.cn` 无需配置直接使用
 
-注意：本项目不保存任何 `POC` 仅提供执行引擎
+注意：本项目 **不提供** 任何 `POC` 规则文件（仅提供执行引擎）
 
 `POC` 仓库: https://github.com/chaitin/xray/tree/master/pocs
 
