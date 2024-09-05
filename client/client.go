@@ -25,6 +25,9 @@ import (
 	"time"
 )
 
+// HttpClient
+// 这是 RAW HTTP 的包装
+// 不建议直接使用 RAW HTTP CLIENT
 type HttpClient struct {
 	client *rawhttp.HTTPClient
 }

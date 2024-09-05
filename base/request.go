@@ -18,6 +18,8 @@
 
 package base
 
+// Request
+// 每个 RULE 对应的 REQUEST
 type Request struct {
 	Cache          bool
 	Method         string

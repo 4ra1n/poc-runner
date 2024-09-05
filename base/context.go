@@ -25,6 +25,8 @@ import (
 
 // PocContext
 // 单个 POC 的 Context
+// 这里的很多信息保存暂时未用到
+// 考虑到未来做统计需要
 type PocContext struct {
 	// 包装后的 HTTP CLIENT
 	// 不建议直接使用 RAW CLIENT

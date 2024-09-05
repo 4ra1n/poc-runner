@@ -18,6 +18,8 @@
 
 package base
 
+// Rule
+// 规则
 type Rule struct {
 	Req        *Request
 	Expression *Expr

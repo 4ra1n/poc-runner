@@ -24,6 +24,10 @@ import (
 	"github.com/4ra1n/poc-runner/log"
 )
 
+// XError
+// 自定义错误类型
+// 可以输出堆栈
+// 本质是为了让错误变成 JAVA 的感觉
 type XError struct {
 	message string
 	stack   string

@@ -20,6 +20,10 @@ package base
 
 import "github.com/4ra1n/poc-runner/expression"
 
+// Expr
+// 表达式
+// 一开始没有把表达式当作 string
+// 所以给到了一个 struct 未来拓展
 type Expr struct {
 	Env      *expression.Environment
 	StrValue string

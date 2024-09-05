@@ -23,18 +23,26 @@ import (
 	"github.com/4ra1n/poc-runner/expression"
 )
 
+// POC
+// XRAY 的 POC 总结构体
 type POC struct {
-	Env        *expression.Environment
-	Context    *PocContext
-	Caches     *GlobalCache
-	Target     string
-	Name       string
-	Transport  string
-	Set        *Map[string, *Expr]
+	// 这是 EXPRESSION 的环境
+	Env *expression.Environment
+	// 当前 POC 需要保存的信息
+	Context *PocContext
+	// 全局的缓存
+	Caches *GlobalCache
+	Target string
+	Name   string
+	// 目前仅支持 HTTP
+	Transport string
+	Set       *Map[string, *Expr]
+	// PAYLOAD 暂未实现
 	Payload    *Payload
 	Rules      *Map[string, *Rule]
 	Expression *Expr
-	Detail     *Map[string, string]
+	// DETAIL 暂未实现
+	Detail *Map[string, string]
 }
 
 func (p *POC) DoReq(req *client.TheRequest) (*client.TheResponse, error) {

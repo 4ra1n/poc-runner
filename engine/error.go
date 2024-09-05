@@ -25,6 +25,7 @@ import (
 )
 
 func checkError(err error) {
+	// X ERROR 类型打印堆栈
 	if errors.As(err, &xe) {
 		xe.PrintStack()
 	} else {

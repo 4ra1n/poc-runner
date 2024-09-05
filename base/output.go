@@ -18,6 +18,9 @@
 
 package base
 
+// Output
+// 这里是 XRAY 的 OUTPUT 语法
+// 通过 SEARCH 正则提取
 type Output struct {
 	Search     string
 	ValueName  string

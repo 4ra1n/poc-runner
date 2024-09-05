@@ -28,11 +28,7 @@ type RespHeaderValue struct {
 	Headers map[string][]string
 }
 
-func (r RespHeaderValue) ToString() expression.EString {
-	return "headers"
-}
-
-func (r RespHeaderValue) Get(name string) (expression.EValue, error) {
+func (r *RespHeaderValue) Get(name string) (expression.EValue, error) {
 	for k, v := range r.Headers {
 		all := &strings.Builder{}
 		// 处理多个头的情况
@@ -52,6 +48,10 @@ func (r RespHeaderValue) Get(name string) (expression.EValue, error) {
 	return expression.EString(""), nil
 }
 
-func (r RespHeaderValue) Keys() []string {
-	panic("implement me")
+func (r *RespHeaderValue) Keys() []string {
+	return []string{}
+}
+
+func (r *RespHeaderValue) ToString() expression.EString {
+	return "headers"
 }

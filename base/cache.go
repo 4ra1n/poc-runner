@@ -25,6 +25,8 @@ import (
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
+// CacheItem
+// 缓存
 type CacheItem struct {
 	PocName  string
 	RuleName string
@@ -32,6 +34,8 @@ type CacheItem struct {
 	Resp     *client.TheResponse
 }
 
+// GlobalCache
+// 全局的缓存
 type GlobalCache struct {
 	caches *List[*CacheItem]
 }

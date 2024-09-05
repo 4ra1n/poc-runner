@@ -32,10 +32,6 @@ type RespValue struct {
 	Headers *RespHeaderValue
 }
 
-func (r *RespValue) ToString() expression.EString {
-	panic("implement me")
-}
-
 func (r *RespValue) Get(name string) (expression.EValue, error) {
 	switch name {
 	case "status":
@@ -63,5 +59,9 @@ func (r *RespValue) Get(name string) (expression.EValue, error) {
 }
 
 func (r *RespValue) Keys() []string {
-	panic("implement me")
+	return []string{}
+}
+
+func (r *RespValue) ToString() expression.EString {
+	return "response"
 }

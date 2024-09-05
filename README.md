@@ -65,6 +65,8 @@ Thank you for your interest in contributing to the poc-runner project
 
 欢迎师傅们贡献 `poc-runner` 项目，所有 `PR` 都会经过 `CODE REVIEW`
 
+注意：请尽量不要引入第三方库，尽可能使用标准库实现功能，本项目的宗旨是轻量
+
 ## SUPPORT
 
 type

@@ -18,5 +18,7 @@
 
 package base
 
+// Payload
+// XRAY 的 PAYLOAD 语法后续考虑支持
 type Payload struct {
 }
