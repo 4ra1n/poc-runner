@@ -155,7 +155,19 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 				return
 			}
 		case htmlOut:
-			// TODO
+			var j string
+			j, err = NewResultHTML(poc)
+			if err != nil {
+				checkError(err)
+				return
+			}
+			fileName := fmt.Sprintf("%s-%d.html", poc.Name, time.Now().UnixMilli())
+			log.Infof("output file: %s", fileName)
+			err = os.WriteFile(fileName, []byte(j), 0644)
+			if err != nil {
+				checkError(err)
+				return
+			}
 		case jsonOut:
 			var j string
 			j, err = NewResultJson(poc)

@@ -53,6 +53,10 @@ XRAY POC RUNNER (Open Source Version)
 
 ![](img/004.png)
 
+`HTML` 报告页面
+
+![](img/005.png)
+
 ## BUILD
 
 WINDOWS: 参考 `build.bat`

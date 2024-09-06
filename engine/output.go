@@ -100,3 +100,12 @@ func NewResultTxt(poc *base.POC) (string, error) {
 	}
 	return buf.String(), nil
 }
+
+func NewResultHTML(poc *base.POC) (string, error) {
+	res := newResultInternal(poc)
+	data, err := BuildHTMLReport(res)
+	if err != nil {
+		return "", xerr.Wrap(err)
+	}
+	return data, nil
+}
