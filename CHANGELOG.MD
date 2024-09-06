@@ -1,3 +1,17 @@
+## 0.0.3
+
+todo
+
+更新日志：
+
+- todo
+
+感谢以下用户的贡献:
+
+- 4ra1n (https://github.com/4ra1n)
+
+所有可供下载的文件都由 `Github Actions` 构建
+
 ## 0.0.2
 
 支持 `txt/json/html` 等多种 `output` 类型
