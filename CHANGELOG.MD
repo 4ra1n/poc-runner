@@ -6,6 +6,7 @@
 
 - [功能] 支持 `projectdiscovery/interactsh` 反连
 - [BUG] 修复 `dnslog.cn` 不走代理设置的问题
+- [其他] 优化 `build action` 的触发方式
 
 感谢以下用户的贡献:
 
