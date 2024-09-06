@@ -23,11 +23,12 @@ import (
 	"crypto/rsa"
 	"encoding/json"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/xerr"
-	"strings"
-	"time"
 )
 
 type InteractResult struct {

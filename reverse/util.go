@@ -29,9 +29,10 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
-	"github.com/4ra1n/poc-runner/xerr"
 	"math/rand"
 	"time"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 func init() {
