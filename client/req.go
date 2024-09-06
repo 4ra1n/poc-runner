@@ -25,6 +25,7 @@ type TheRequest struct {
 	FollowRedirect bool
 	Body           string
 	Headers        map[string]string
+	All            []byte
 }
 
 // Equals

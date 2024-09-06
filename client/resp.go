@@ -22,4 +22,5 @@ type TheResponse struct {
 	Code    int
 	Headers map[string][]string
 	Body    []byte
+	All     []byte
 }

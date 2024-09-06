@@ -63,5 +63,7 @@ func (c *HttpClient) DoReq(req *TheRequest) (*TheResponse, error) {
 	bodyBytes := resp.Body
 	theResp.Body = bodyBytes
 	theResp.Headers = resp.Headers
+	theResp.All = resp.RawResponse
+	req.All = resp.RawRequest
 	return theResp, nil
 }

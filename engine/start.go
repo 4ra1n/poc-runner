@@ -23,6 +23,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -41,6 +42,7 @@ var (
 	target  string
 	proxy   string
 	timeout string
+	output  string
 	xe      *xerr.XError
 )
 
@@ -51,6 +53,7 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	flag.BoolVar(&quiet, "quiet", false, "quiet mode (only output error and set error log level)")
 	flag.StringVar(&proxy, "proxy", "", "set socks5 proxy (socks5://ip:port)")
 	flag.StringVar(&timeout, "timeout", "", "set http client timeout second (10)")
+	flag.StringVar(&output, "output", stdoutOut, "set output type (support stdout | txt | json | html)")
 	flag.Parse()
 
 	path = strings.TrimSpace(path)
@@ -119,10 +122,58 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	globalCache := base.NewGlobalCache()
 	poc.Caches = globalCache
 
-	err = RunPOC(poc, target)
+	success, err := RunPOC(poc, target)
 	if err != nil {
 		checkError(err)
 		return
+	}
+
+	if !success {
+		log.Info("no vulnerability found")
+	} else {
+		// validate output type
+		output = strings.TrimSpace(output)
+		output = strings.ToLower(output)
+		switch output {
+		case stdoutOut:
+			log.RedPrintln("#################### FOUND VULNERABILITY ####################")
+			log.RedPrintln("POC    -> ", poc.Name)
+			log.RedPrintln("TARGET -> ", poc.Target)
+			log.RedPrintln("#############################################################")
+		case txtOut:
+			var j string
+			j, err = NewResultTxt(poc)
+			if err != nil {
+				checkError(err)
+				return
+			}
+			fileName := fmt.Sprintf("%s-%d.txt", poc.Name, time.Now().UnixMilli())
+			log.Infof("output file: %s", fileName)
+			err = os.WriteFile(fileName, []byte(j), 0644)
+			if err != nil {
+				checkError(err)
+				return
+			}
+		case htmlOut:
+			// TODO
+		case jsonOut:
+			var j string
+			j, err = NewResultJson(poc)
+			if err != nil {
+				checkError(err)
+				return
+			}
+			fileName := fmt.Sprintf("%s-%d.json", poc.Name, time.Now().UnixMilli())
+			log.Infof("output file: %s", fileName)
+			err = os.WriteFile(fileName, []byte(j), 0644)
+			if err != nil {
+				checkError(err)
+				return
+			}
+		default:
+			log.Error("not support output type:", output)
+			return
+		}
 	}
 
 	log.Info("poc runner finish")

@@ -148,6 +148,7 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 		_ = conn.Close()
 		return nil, xerr.Wrap(err)
 	}
+	resp.RawRequest = buildReq
 
 	if req.FollowRedirect {
 		for isRedirect(resp.StatusCode) && req.redirectCount < c.MaxRedirects {

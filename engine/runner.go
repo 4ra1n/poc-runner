@@ -30,12 +30,12 @@ import (
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
-func RunPOC(poc *base.POC, t string) error {
+func RunPOC(poc *base.POC, t string) (bool, error) {
 	poc.Target = t
 	// 执行 set 部分设置环境变量
 	err := execSet(poc)
 	if err != nil {
-		return xerr.Wrap(err)
+		return false, xerr.Wrap(err)
 	}
 	log.Info("run set expr finish")
 	return execGlobalRules(poc)
@@ -185,7 +185,7 @@ func execRule(poc *base.POC, key string, rule *base.Rule) (expression.EValue, er
 	return expression.EBool(resultBool), nil
 }
 
-func execGlobalRules(poc *base.POC) error {
+func execGlobalRules(poc *base.POC) (bool, error) {
 	var rules = make(Rule)
 	for _, ruleKey := range poc.Rules.Keys() {
 		rules[ruleKey] = &RuleFunction{
@@ -196,13 +196,13 @@ func execGlobalRules(poc *base.POC) error {
 	}
 	value, err := poc.Env.EvalWithVars(poc.Expression.StrValue, rules)
 	if err != nil {
-		return xerr.Wrap(err)
+		return false, xerr.Wrap(err)
 	}
 	result, ok := value.(expression.EBool)
 	if !ok {
-		return xerr.Wrap(errors.New("rule result must be a bool"))
+		return false, xerr.Wrap(errors.New("rule result must be a bool"))
 	}
 	resultBool := bool(result)
 	log.Infof("rule [global] result [%v]", resultBool)
-	return nil
+	return resultBool, nil
 }
