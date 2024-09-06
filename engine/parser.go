@@ -32,6 +32,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func ParseYAMLInput(ctx context.Context, c *client.HttpClient, data []byte) (*base.POC, error) {
+	var object interface{}
+	err := yaml.Unmarshal(data, &object)
+	if err != nil {
+		return nil, xerr.Wrap(err)
+	}
+	root, ok := object.(map[string]interface{})
+	if !ok {
+		return nil, xerr.Wrap(errors.New("yaml is not a map"))
+	}
+	return parse(ctx, c, root)
+}
+
 func ParseYAMLFile(ctx context.Context, c *client.HttpClient, s string) (*base.POC, error) {
 	data, err := os.ReadFile(s)
 	if err != nil {
