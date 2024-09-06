@@ -249,3 +249,9 @@ reverse function
 <img src="https://api.star-history.com/svg?repos=4ra1n/poc-runner&type=Date" width="600" height="400" alt="Star History Chart" valign="middle">
 
 </div>
+
+## THANKS 
+
+部分代码参考: https://github.com/raylax/rayx
+
+感谢
