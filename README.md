@@ -62,7 +62,7 @@ XRAY POC RUNNER (Open Source Version)
 Get
 
 ```shell
-go get github.com/4ra1n/poc-runner/api
+go get github.com/4ra1n/poc-runner/api@0.0.2
 ```
 
 Example
