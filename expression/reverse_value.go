@@ -23,7 +23,6 @@ import (
 	"fmt"
 
 	"github.com/4ra1n/poc-runner/client"
-	"github.com/4ra1n/poc-runner/rawhttp"
 	"github.com/4ra1n/poc-runner/reverse"
 	"github.com/4ra1n/poc-runner/xerr"
 )
@@ -33,14 +32,11 @@ type Reverse struct {
 }
 
 func NewReverse() (*Reverse, error) {
-	cl, err := client.NewHttpClient(rawhttp.DefaultNoProxy, rawhttp.DefaultTimeout, false)
+	r, err := reverse.NewReverse(client.Instance)
 	if err != nil {
 		return nil, xerr.Wrap(err)
 	}
-	r, err := reverse.NewReverse(cl)
-	if err != nil {
-		return nil, xerr.Wrap(err)
-	}
+	reverse.Instance = r
 	return &Reverse{
 		rev: r,
 	}, nil

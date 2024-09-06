@@ -20,14 +20,12 @@ package reverse
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strings"
 	"time"
 
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/log"
-	"github.com/4ra1n/poc-runner/xerr"
 )
 
 const dnsLogCnUrl = "http://dnslog.cn/"
@@ -40,35 +38,6 @@ type DnsLogCn struct {
 	baseUrl   string
 	newDomain string
 	session   string
-}
-
-func NewReverse(c *client.HttpClient) (Reverse, error) {
-	resp, err := c.DoReq(&client.TheRequest{
-		Target:         dnsLogCnUrl,
-		Method:         "GET",
-		Path:           "/getdomain.php",
-		FollowRedirect: false,
-		Body:           "",
-		Headers:        make(map[string]string),
-	})
-	if err != nil {
-		return nil, xerr.Wrap(err)
-	}
-	r := randStringRunes(8)
-	newDomain := strings.TrimSpace(string(resp.Body))
-	if newDomain == "" {
-		return nil, xerr.Wrap(errors.New("dnslog.cn error"))
-	}
-	session, ok := resp.Headers["Set-Cookie"]
-	if !ok {
-		return nil, xerr.Wrap(errors.New("dnslog.cn session error"))
-	}
-	return &DnsLogCn{
-		c:         c,
-		baseUrl:   dnsLogCnUrl,
-		newDomain: fmt.Sprintf("%s.%s", r, newDomain),
-		session:   session[0],
-	}, nil
 }
 
 func (d *DnsLogCn) GetUrl() string {
@@ -95,6 +64,9 @@ func (d *DnsLogCn) Wait(i int) bool {
 		}
 	}
 	return false
+}
+
+func (d *DnsLogCn) Close() {
 }
 
 func (d *DnsLogCn) waitInternal() bool {

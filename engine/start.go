@@ -32,6 +32,7 @@ import (
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/rawhttp"
+	"github.com/4ra1n/poc-runner/reverse"
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
@@ -43,6 +44,7 @@ var (
 	proxy   string
 	timeout string
 	output  string
+	rev     string
 	xe      *xerr.XError
 )
 
@@ -54,6 +56,7 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	flag.StringVar(&proxy, "proxy", "", "set socks5 proxy (socks5://ip:port)")
 	flag.StringVar(&timeout, "timeout", "", "set http client timeout second (10)")
 	flag.StringVar(&output, "output", stdoutOut, "set output type (support stdout | txt | json | html)")
+	flag.StringVar(&rev, "reverse", reverse.DNSLogCN, "set reverse type (support dnslog.cn | interact.sh)")
 	flag.Parse()
 
 	path = strings.TrimSpace(path)
@@ -94,7 +97,7 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 			checkError(err)
 			return
 		}
-		if t < 1 || t > 60 {
+		if t < 1 || t > 61 {
 			checkError(errors.New("timeout invalid"))
 			return
 		}
@@ -107,8 +110,9 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 		checkError(err)
 		return
 	}
+	client.Instance = c
 
-	poc, err := ParseYAMLFile(ctx, c, path)
+	poc, err := ParseYAMLFile(ctx, client.Instance, path)
 	if err != nil {
 		checkError(err)
 		return
@@ -121,6 +125,8 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	// INIT GLOBAL CACHE
 	globalCache := base.NewGlobalCache()
 	poc.Caches = globalCache
+
+	reverse.Type = rev
 
 	success, err := RunPOC(poc, target)
 	if err != nil {
@@ -186,6 +192,10 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 			log.Error("not support output type:", output)
 			return
 		}
+	}
+
+	if reverse.Instance != nil {
+		reverse.Instance.Close()
 	}
 
 	log.Info("poc runner finish")

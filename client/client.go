@@ -25,6 +25,8 @@ import (
 	"time"
 )
 
+var Instance *HttpClient
+
 // HttpClient
 // 这是 RAW HTTP 的包装
 // 不建议直接使用 RAW HTTP CLIENT
@@ -65,5 +67,20 @@ func (c *HttpClient) DoReq(req *TheRequest) (*TheResponse, error) {
 	theResp.Headers = resp.Headers
 	theResp.All = resp.RawResponse
 	req.All = resp.RawRequest
+	return theResp, nil
+}
+
+func (c *HttpClient) Get(u string) (*TheResponse, error) {
+	resp, err := c.client.Get(u)
+	if err != nil {
+		return nil, xerr.Wrap(err)
+	}
+	theResp := &TheResponse{}
+	theResp.Code = resp.StatusCode
+	bodyBytes := resp.Body
+	theResp.Body = bodyBytes
+	theResp.Headers = resp.Headers
+	theResp.All = resp.RawResponse
+	// ignore request raw
 	return theResp, nil
 }

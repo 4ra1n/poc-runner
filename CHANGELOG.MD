@@ -1,10 +1,11 @@
 ## 0.0.3
 
-todo
+修复一些问题，支持了 `projectdiscovery/interactsh` 反连
 
 更新日志：
 
-- todo
+- [功能] 支持 `projectdiscovery/interactsh` 反连
+- [BUG] 修复 `dnslog.cn` 不走代理设置的问题
 
 感谢以下用户的贡献:
 

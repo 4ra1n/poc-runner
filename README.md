@@ -29,7 +29,7 @@ XRAY POC RUNNER (Open Source Version)
 - 完全不使用 `google/cel` 库（使用底层 `antlr` 实现更轻量的表达式解析）
 - 完全不使用 `net/http` 库（使用 `net.Dial` 从零实现 `raw http client`）
 
-反连内置了 `dnslog.cn` 无需配置直接使用
+反连内置了 `dnslog.cn` 和 `projectdiscovery/interactsh` 无需配置直接使用
 
 注意：本项目 **不提供** 任何 `POC` 规则文件（仅提供执行引擎）
 
@@ -49,13 +49,23 @@ XRAY POC RUNNER (Open Source Version)
 
 ![](img/003.png)
 
-报错信息详细完善
-
-![](img/004.png)
-
 `HTML` 报告页面
 
 ![](img/005.png)
+
+## 反连
+
+默认使用 `dnslog.cn` 作为反连
+
+你可以使用 `-reverse interact.sh` 指定使用 `projectdiscovery/interactsh`
+
+![](img/006.png)
+
+由于网络原因，建议搭配代理使用
+
+```shell
+./poc-runner -r [poc].yml -t http://target -reverse interact.sh -proxy socks5://127.0.0.1:10808
+```
 
 ## API
 
