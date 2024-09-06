@@ -57,6 +57,57 @@ XRAY POC RUNNER (Open Source Version)
 
 ![](img/005.png)
 
+## API
+
+Get
+
+```shell
+go get github.com/4ra1n/poc-runner/api
+```
+
+Example
+
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/4ra1n/poc-runner/api"
+)
+
+var poc = `name: poc-yaml-test
+transport: http
+set:
+  rand: randomInt(200000000, 210000000)
+rules:
+  r0:
+    request:
+      cache: true
+      method: POST
+      path: /test
+      headers:
+        Content-Type: text/xml
+      body: test
+      follow_redirects: false
+    expression: response.status == 404
+expression: r0()`
+
+func main() {
+	ctx := context.Background()
+	runner, err := api.NewPocRunner(ctx)
+	if err != nil {
+		return
+	}
+	report, err := runner.Run([]byte(poc), "https://example.com")
+	if err != nil {
+		return
+	}
+	fmt.Println(report)
+}
+```
+
 ## BUILD
 
 WINDOWS: 参考 `build.bat`
