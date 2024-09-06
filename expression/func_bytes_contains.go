@@ -21,8 +21,9 @@ package expression
 import (
 	"bytes"
 	"fmt"
-	"github.com/4ra1n/poc-runner/xerr"
 	"reflect"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 type eBytesBcontains struct {

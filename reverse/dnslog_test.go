@@ -20,9 +20,10 @@ package reverse
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/rawhttp"
-	"testing"
 )
 
 func TestDNSLOG(t *testing.T) {

@@ -20,9 +20,11 @@ package expression
 
 import (
 	"context"
-	"github.com/4ra1n/poc-runner/xerr"
-	"github.com/antlr4-go/antlr/v4"
 	"regexp"
+
+	"github.com/antlr4-go/antlr/v4"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 type Environment struct {

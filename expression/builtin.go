@@ -24,10 +24,11 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"github.com/4ra1n/poc-runner/xerr"
 	"hash"
 	"net/url"
 	"reflect"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 // 这是内置的一些函数

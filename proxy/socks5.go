@@ -6,8 +6,9 @@ package proxy
 
 import (
 	"context"
-	socks "github.com/4ra1n/poc-runner/proxy/internal"
 	"net"
+
+	socks "github.com/4ra1n/poc-runner/proxy/internal"
 )
 
 // SOCKS5 returns a Dialer that makes SOCKSv5 connections to the given

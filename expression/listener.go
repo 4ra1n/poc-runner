@@ -21,8 +21,10 @@ package expression
 import (
 	"errors"
 	"fmt"
-	"github.com/4ra1n/poc-runner/xerr"
+
 	"github.com/antlr4-go/antlr/v4"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 type parserErrorListener struct {

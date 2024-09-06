@@ -20,9 +20,10 @@ package expression
 
 import (
 	"fmt"
+	"reflect"
+
 	"github.com/4ra1n/poc-runner/reverse"
 	"github.com/4ra1n/poc-runner/xerr"
-	"reflect"
 )
 
 type eFunctionReverseWait struct {

@@ -22,11 +22,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"strings"
+	"time"
+
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/xerr"
-	"strings"
-	"time"
 )
 
 const dnsLogCnUrl = "http://dnslog.cn/"

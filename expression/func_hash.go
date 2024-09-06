@@ -21,9 +21,10 @@ package expression
 import (
 	"encoding/hex"
 	"fmt"
-	"github.com/4ra1n/poc-runner/xerr"
 	"hash"
 	"reflect"
+
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 type eFunctionHash struct {
