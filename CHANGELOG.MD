@@ -1,11 +1,13 @@
 ## 0.0.3
 
-修复一些问题，支持了 `projectdiscovery/interactsh` 反连
+修复一些问题，支持了 `interactsh` 反连
 
 更新日志：
 
 - [功能] 支持 `projectdiscovery/interactsh` 反连
 - [BUG] 修复 `dnslog.cn` 不走代理设置的问题
+- [BUG] 指定输出类型时不会打印漏洞信息问题
+- [优化] 优化输入目标非标准 `url` 的处理
 - [其他] 优化 `build action` 的触发方式
 
 感谢以下用户的贡献:

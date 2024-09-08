@@ -16,53 +16,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package expression
+package engine
 
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/4ra1n/poc-runner/client"
-	"github.com/4ra1n/poc-runner/reverse"
+	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
-type Reverse struct {
-	rev reverse.Reverse
-}
-
-func NewReverse() (*Reverse, error) {
-	r, err := reverse.NewReverse(client.Instance)
+func checkTarget(target string) (bool, string, error) {
+	c := client.Instance
+	target = strings.TrimSpace(target)
+	if !strings.HasPrefix(target, "http") {
+		target = fmt.Sprintf("http://%s", target)
+	}
+	resp, err := c.Get(target)
 	if err != nil {
-		return nil, xerr.Wrap(err)
+		return false, "", xerr.Wrap(err)
 	}
-	reverse.Instance = r
-	return &Reverse{
-		rev: r,
-	}, nil
-}
-
-func (r *Reverse) ToString() EString {
-	return EString(fmt.Sprintf("[REVERSE:%p]", r.rev))
-}
-
-func (r *Reverse) Get(name string) (EValue, error) {
-	switch name {
-	case "url":
-		return EString(r.rev.GetUrl()), nil
-	case "rmi":
-		return EString(r.rev.GetRmi()), nil
-	case "ldap":
-		return EString(r.rev.GetLdap()), nil
-	case "domain":
-		return EString(r.rev.GetDNS()), nil
-	case "wait":
-		return &eFunctionReverseWait{r.rev}, nil
-	default:
-		return nil, xerr.Wrap(errors.New("not support: " + name))
+	if resp != nil {
+		log.Infof("check target response: %d", resp.Code)
+		return true, target, err
+	} else {
+		return false, "", xerr.Wrap(errors.New("response is nil"))
 	}
-}
-
-func (r *Reverse) Keys() []string {
-	return []string{}
 }

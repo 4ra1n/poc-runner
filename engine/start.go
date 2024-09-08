@@ -112,6 +112,19 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	}
 	client.Instance = c
 
+	// CHECK TARGET
+	var ok bool
+	ok, target, err = checkTarget(target)
+	if err != nil {
+		checkError(err)
+		return
+	}
+	if !ok {
+		log.Errorf("target %s is not available")
+		log.Warn("please check network/proxy config")
+		return
+	}
+
 	poc, err := ParseYAMLFile(ctx, client.Instance, path)
 	if err != nil {
 		checkError(err)
@@ -142,11 +155,10 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 		output = strings.ToLower(output)
 		switch output {
 		case stdoutOut:
-			log.RedPrintln("#################### FOUND VULNERABILITY ####################")
-			log.RedPrintln("POC    -> ", poc.Name)
-			log.RedPrintln("TARGET -> ", poc.Target)
-			log.RedPrintln("#############################################################")
+			baseOutput(poc)
 		case txtOut:
+			log.Info("output type: txt")
+			baseOutput(poc)
 			var j string
 			j, err = NewResultTxt(poc)
 			if err != nil {
@@ -161,6 +173,8 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 				return
 			}
 		case htmlOut:
+			log.Info("output type: html")
+			baseOutput(poc)
 			var j string
 			j, err = NewResultHTML(poc)
 			if err != nil {
@@ -175,6 +189,8 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 				return
 			}
 		case jsonOut:
+			log.Info("output type: json")
+			baseOutput(poc)
 			var j string
 			j, err = NewResultJson(poc)
 			if err != nil {

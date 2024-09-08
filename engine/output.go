@@ -24,6 +24,7 @@ import (
 	"strings"
 
 	"github.com/4ra1n/poc-runner/base"
+	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
@@ -108,4 +109,11 @@ func NewResultHTML(poc *base.POC) (string, error) {
 		return "", xerr.Wrap(err)
 	}
 	return data, nil
+}
+
+func baseOutput(poc *base.POC) {
+	log.RedPrintln("#################### FOUND VULNERABILITY ####################")
+	log.RedPrintln("POC    -> ", poc.Name)
+	log.RedPrintln("TARGET -> ", poc.Target)
+	log.RedPrintln("#############################################################")
 }
