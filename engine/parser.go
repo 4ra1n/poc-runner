@@ -97,7 +97,42 @@ func parse(ctx context.Context, c *client.HttpClient, root map[string]interface{
 		}
 	}
 	// ------------------------ payloads ------------------------
-	poc.Payload = &base.Payload{}
+	poc.Payload = base.NewPayload()
+	if val, ok := root["payloads"]; ok {
+		mapVal, mapOK := val.(map[string]interface{})
+		if !mapOK {
+			return nil, xerr.Wrap(errors.New("payloads syntax error: outer payloads is not a map"))
+		}
+		innerVal, innerOK := mapVal["payloads"]
+		if !innerOK {
+			return nil, xerr.Wrap(errors.New("payloads syntax error: payloads must contains payloads"))
+		}
+		itemVal, itemOK := innerVal.(map[string]interface{})
+		if !itemOK {
+			return nil, xerr.Wrap(errors.New("payloads syntax error: inner payloads is not a map"))
+		}
+		for k, v := range itemVal {
+			vv, vvOK := v.(map[string]interface{})
+			if !vvOK {
+				return nil, xerr.Wrap(errors.New("payloads syntax error: payloads items must be a map"))
+			}
+			itemMap := base.NewMap[string, *base.Expr]()
+			for ik, iv := range vv {
+				expr := &base.Expr{}
+				expr.Env = poc.Env
+				tempStr, isStr := iv.(string)
+				if isStr {
+					expr.StrValue = tempStr
+				}
+				tempInt, isInt := iv.(int)
+				if isInt {
+					expr.StrValue = strconv.Itoa(tempInt)
+				}
+				itemMap.Set(ik, expr)
+			}
+			poc.Payload.Set(k, itemMap)
+		}
+	}
 	// 必须存在
 	poc.Rules = base.NewMap[string, *base.Rule]()
 	// ------------------------ rules ------------------------

@@ -1,0 +1,36 @@
+name: poc-yaml-test-payloads
+transport: http
+payloads:
+  payloads:
+    upload1:
+      path: |
+        "upload-srv-1/"
+      body: |
+        "upload1"
+    upload2:
+      path: |
+        "upload-srv-2/"
+      body: |
+        "upload2"
+    upload3:
+      path: |
+        "upload-srv-3/"
+      body: |
+        "upload3"
+    upload4:
+      path: |
+        ""
+      body: |
+        ""
+rules:
+  r0:
+    request:
+      method: POST
+      path: /admin%20/{{path}}test
+      headers:
+        Content-Type: application/x-www-form-urlencoded
+      body: |
+        {{body}}
+    expression: |
+      response.status == 404 && !response.body_string.contains("test")
+expression: r0()

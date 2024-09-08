@@ -1,9 +1,10 @@
 ## 0.0.3
 
-修复一些问题，支持了 `interactsh` 反连
+支持了 `payloads` 语法和 `interactsh` 反连
 
 更新日志：
 
+- [功能] 支持 `xray v2` 规范的 `payloads` 语法
 - [功能] 支持 `projectdiscovery/interactsh` 反连
 - [BUG] 修复 `dnslog.cn` 不走代理设置的问题
 - [BUG] 指定输出类型时不会打印漏洞信息问题

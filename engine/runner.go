@@ -185,7 +185,7 @@ func execRule(poc *base.POC, key string, rule *base.Rule) (expression.EValue, er
 	return expression.EBool(resultBool), nil
 }
 
-func execGlobalRules(poc *base.POC) (bool, error) {
+func execGlobalRulesInternal(poc *base.POC) (bool, error) {
 	var rules = make(Rule)
 	for _, ruleKey := range poc.Rules.Keys() {
 		rules[ruleKey] = &RuleFunction{
@@ -205,4 +205,44 @@ func execGlobalRules(poc *base.POC) (bool, error) {
 	resultBool := bool(result)
 	log.Infof("rule [global] result [%v]", resultBool)
 	return resultBool, nil
+}
+
+func execGlobalRules(poc *base.POC) (bool, error) {
+	if poc.Payload.Available() {
+		pMap := poc.Payload.Get()
+		for _, key := range pMap.Keys() {
+			v := pMap.Get(key)
+			for _, innerKey := range v.Keys() {
+				innerVal := v.Get(innerKey)
+				expr := innerVal.StrValue
+				vars := expression.MapVars{}
+				for kk, vv := range poc.Context.Local.ToMap() {
+					vars[kk] = vv
+				}
+				res, err := poc.Env.EvalWithVars(expr, vars)
+				if err != nil {
+					return false, xerr.Wrap(err)
+				}
+				if res != nil {
+					log.Infof("payloads [%s] %s -> %s", key, innerKey, res.ToString())
+					poc.Context.Local.Set(innerKey, res)
+				}
+			}
+			success, err := execGlobalRulesInternal(poc)
+			if err != nil {
+				return false, xerr.Wrap(err)
+			}
+			log.Infof("payloads [%s] result [%v]", key, success)
+			if success {
+				return true, nil
+			}
+		}
+		return false, nil
+	} else {
+		success, err := execGlobalRulesInternal(poc)
+		if err != nil {
+			return false, xerr.Wrap(err)
+		}
+		return success, nil
+	}
 }
