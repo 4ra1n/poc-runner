@@ -199,9 +199,9 @@ func parse(ctx context.Context, c *client.HttpClient, root map[string]interface{
 		rule.Expression = expr
 		// OUTPUT
 		rule.Output = &base.Output{}
-		output, ok := ruleItems["output"]
+		pocOutput, ok := ruleItems["output"]
 		if ok {
-			items, isMap := output.(map[string]interface{})
+			items, isMap := pocOutput.(map[string]interface{})
 			if !isMap {
 				return nil, xerr.Wrap(errors.New("output must be a map"))
 			}
