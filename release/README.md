@@ -18,8 +18,12 @@ SET "VERSION=0.0.1"
 
 ## STEP3
 
-github action run
+edit `README.md` api doc
 
 ## STEP4
+
+github action run
+
+## STEP5
 
 github release
