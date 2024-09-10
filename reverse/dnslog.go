@@ -79,6 +79,7 @@ func (d *DnsLogCn) waitInternal() bool {
 		Headers: map[string]string{
 			"Cookie": d.session,
 		},
+		IsFromPoC: false,
 	})
 	if err != nil {
 		log.Error(err)

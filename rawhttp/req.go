@@ -42,6 +42,8 @@ type Request struct {
 	RawHeader     []byte
 	RawRequest    []byte
 	redirectCount int
+	// 特殊信息
+	IsFromPoC bool
 }
 
 func NewRequest(target string, method string) (*Request, error) {

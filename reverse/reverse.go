@@ -71,6 +71,7 @@ func NewReverse(c *client.HttpClient) (Reverse, error) {
 			FollowRedirect: false,
 			Body:           "",
 			Headers:        make(map[string]string),
+			IsFromPoC:      false,
 		})
 		if err != nil {
 			return nil, xerr.Wrap(err)

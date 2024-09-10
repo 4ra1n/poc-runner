@@ -51,6 +51,7 @@ func (c *HttpClient) DoReq(req *TheRequest) (*TheResponse, error) {
 	if err != nil {
 		return nil, xerr.Wrap(err)
 	}
+	rawReq.IsFromPoC = req.IsFromPoC
 	rawReq.SetBody(req.Body)
 	rawReq.SetFollowRedirect(req.FollowRedirect)
 	for k, v := range req.Headers {

@@ -46,6 +46,7 @@ type POC struct {
 }
 
 func (p *POC) DoReq(req *client.TheRequest) (*client.TheResponse, error) {
+	req.IsFromPoC = true
 	return p.Context.Client.DoReq(req)
 }
 

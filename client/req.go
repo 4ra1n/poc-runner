@@ -26,6 +26,8 @@ type TheRequest struct {
 	Body           string
 	Headers        map[string]string
 	All            []byte
+	// 特殊信息
+	IsFromPoC bool
 }
 
 // Equals

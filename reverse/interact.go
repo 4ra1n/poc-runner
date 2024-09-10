@@ -159,6 +159,7 @@ func NewInteract(c *client.HttpClient, server string) (*Interact, error) {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
+		IsFromPoC: false,
 	}
 	reResp, err := c.DoReq(regReq)
 	if err != nil {
@@ -202,6 +203,7 @@ func (i *Interact) Close() {
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
+		IsFromPoC: false,
 	}
 	deResp, err := i.c.DoReq(deReq)
 	if err != nil {
@@ -236,6 +238,7 @@ func (i *Interact) Wait(w int) bool {
 		FollowRedirect: false,
 		Body:           "",
 		Headers:        make(map[string]string),
+		IsFromPoC:      false,
 	}
 	var respAesKey string
 	t := time.Duration(w) * time.Second

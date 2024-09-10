@@ -131,10 +131,12 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 
 	buildReq := c.buildReqRaw(req)
 
-	if c.Debug {
+	if c.Debug && req.IsFromPoC {
 		log.BluePrintln("------------------- REQUEST DEBUG -------------------")
 		log.YellowPrintln(formatMessage(buildReq))
 		log.BluePrintln("-----------------------------------------------------")
+	} else if c.Debug && !req.IsFromPoC {
+		log.BluePrintln(fmt.Sprintf("[*] %s://%s:%s%s", req.Protocol, req.IP, req.Port, req.Path))
 	}
 
 	n, err := conn.Write(buildReq)
@@ -187,7 +189,7 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 		}
 	}
 
-	if c.Debug {
+	if c.Debug && req.IsFromPoC {
 		log.BluePrintln("------------------- RESPONSE DEBUG -------------------")
 		log.YellowPrintln(formatMessage(resp.RawResponse))
 		log.BluePrintln("-----------------------------------------------------")
