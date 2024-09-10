@@ -136,7 +136,7 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 		log.YellowPrintln(formatMessage(buildReq))
 		log.BluePrintln("-----------------------------------------------------")
 	} else if c.Debug && !req.IsFromPoC {
-		log.BluePrintln(fmt.Sprintf("[*] %s://%s:%s%s", req.Protocol, req.IP, req.Port, req.Path))
+		log.BluePrintln(fmt.Sprintf("[DEBUG] %s://%s:%s%s", req.Protocol, req.IP, req.Port, req.Path))
 	}
 
 	n, err := conn.Write(buildReq)

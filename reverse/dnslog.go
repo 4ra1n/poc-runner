@@ -67,6 +67,7 @@ func (d *DnsLogCn) Wait(i int) bool {
 }
 
 func (d *DnsLogCn) Close() {
+	log.Info("close dnslog.cn reverse success")
 }
 
 func (d *DnsLogCn) waitInternal() bool {
