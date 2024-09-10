@@ -16,6 +16,8 @@
 
 ## DESC
 
+<a href="https://asciinema.org/a/675489" target="_blank"><img src="https://asciinema.org/a/675489.svg" /></a>
+
 XRAY POC RUNNER (Open Source Version)
 
 这是一个 `XRAY` 的 `YAML` 开源执行器（虽然网上已经有很多个开源实现了）
