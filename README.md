@@ -16,7 +16,7 @@
 
 ## DESC
 
-<a href="https://asciinema.org/a/675489" target="_blank"><img src="https://asciinema.org/a/675489.svg" /></a>
+[![asciicast](https://asciinema.org/a/675489.svg)](https://asciinema.org/a/675489)
 
 XRAY POC RUNNER (Open Source Version)
 
