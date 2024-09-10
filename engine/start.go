@@ -39,6 +39,7 @@ import (
 var (
 	debug   bool
 	quiet   bool
+	check   bool
 	path    string
 	target  string
 	proxy   string
@@ -50,9 +51,10 @@ var (
 
 func Start(ctx context.Context, cancel context.CancelFunc) {
 	flag.StringVar(&path, "r", "", "poc path (support a.yml | a.yaml | pocs/*.yaml | pocs/*.yml)")
-	flag.StringVar(&target, "t", "", "poc target (support http(s)://target | target | target/path)")
+	flag.StringVar(&target, "t", "", "poc target (support http(s)://target | target | url.txt )")
 	flag.BoolVar(&debug, "debug", false, "debug mode (open debug output and set debug log level)")
 	flag.BoolVar(&quiet, "quiet", false, "quiet mode (only output error and set error log level)")
+	flag.BoolVar(&check, "check", false, "check target is valid before run poc")
 	flag.StringVar(&proxy, "proxy", "", "set socks5 proxy (socks5://ip:port)")
 	flag.StringVar(&timeout, "timeout", "", "set http client timeout second (10)")
 	flag.StringVar(&output, "output", stdoutOut, "set output type (support stdout | txt | json | html)")
@@ -69,6 +71,29 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 		flag.PrintDefaults()
 		log.RedPrintln("press ctrl+c to exit / 按 ctrl+c 退出")
 		return
+	}
+
+	var targetList []string
+	// 如果结尾是 txt 且开头没有 http 认为输入是文件
+	if strings.HasSuffix(target, ".txt") &&
+		!strings.HasPrefix(target, "http") {
+		data, err := os.ReadFile(target)
+		if err != nil {
+			checkError(err)
+			return
+		}
+		splits := strings.Split(string(data), "\n")
+		if len(splits) < 1 {
+			checkError(errors.New("invalid target.txt file"))
+			return
+		}
+		for _, split := range splits {
+			split = strings.TrimSpace(split)
+			split = strings.Trim(split, "\r")
+			targetList = append(targetList, split)
+		}
+	} else {
+		targetList = append(targetList, target)
 	}
 
 	if quiet {
@@ -112,39 +137,52 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 	}
 	client.Instance = c
 
-	// CHECK TARGET
-	var ok bool
-	ok, target, err = checkTarget(target)
-	if err != nil {
-		checkError(err)
-		return
-	}
-	if !ok {
-		log.Errorf("target %s is not available")
-		log.Warn("please check network/proxy config")
-		return
-	}
-
-	poc, err := ParseYAMLFile(ctx, client.Instance, path)
-	if err != nil {
-		checkError(err)
-		return
-	}
-
-	log.Info("parse yaml file success")
-	log.Infof("run: %s", poc.Name)
-	log.Infof("target: %s", target)
-
 	// INIT GLOBAL CACHE
 	globalCache := base.NewGlobalCache()
-	poc.Caches = globalCache
 
 	reverse.Type = rev
 
-	success, err := RunPOC(poc, target)
-	if err != nil {
-		checkError(err)
-		return
+	resultList := base.NewList[*base.POC]()
+
+	var success bool
+	for _, theTarget := range targetList {
+		// INIT POC
+		// TODO: OPT
+		poc, err := ParseYAMLFile(ctx, client.Instance, path)
+		if err != nil {
+			checkError(err)
+			return
+		}
+		log.Info("parse yaml file success")
+		log.Infof("run: %s", poc.Name)
+		log.Infof("target: %s", target)
+
+		poc.Caches = globalCache
+
+		log.Infof("scan target: %s", theTarget)
+		// CHECK TARGET
+		if check {
+			var ok bool
+			ok, theTarget, err = checkTarget(theTarget)
+			if err != nil {
+				checkError(err)
+				return
+			}
+			if !ok {
+				log.Errorf("target %s is not available")
+				log.Warn("please check network/proxy config")
+				continue
+			}
+		}
+		// RUN POC
+		success, err = RunPOC(poc, theTarget)
+		if err != nil {
+			checkError(err)
+			continue
+		}
+		if success {
+			resultList.Add(poc)
+		}
 	}
 
 	if !success {
@@ -155,17 +193,17 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 		output = strings.ToLower(output)
 		switch output {
 		case stdoutOut:
-			baseOutput(poc)
+			baseOutput(resultList)
 		case txtOut:
 			log.Info("output type: txt")
-			baseOutput(poc)
+			baseOutput(resultList)
 			var j string
-			j, err = NewResultTxt(poc)
+			j, err = NewResultTxt(resultList)
 			if err != nil {
 				checkError(err)
 				return
 			}
-			fileName := fmt.Sprintf("%s-%d.txt", poc.Name, time.Now().UnixMilli())
+			fileName := fmt.Sprintf("%s-%d.txt", "result-txt", time.Now().UnixMilli())
 			log.Infof("output file: %s", fileName)
 			err = os.WriteFile(fileName, []byte(j), 0644)
 			if err != nil {
@@ -174,14 +212,14 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 			}
 		case htmlOut:
 			log.Info("output type: html")
-			baseOutput(poc)
+			baseOutput(resultList)
 			var j string
-			j, err = NewResultHTML(poc)
+			j, err = NewResultHTML(resultList)
 			if err != nil {
 				checkError(err)
 				return
 			}
-			fileName := fmt.Sprintf("%s-%d.html", poc.Name, time.Now().UnixMilli())
+			fileName := fmt.Sprintf("%s-%d.html", "result-html", time.Now().UnixMilli())
 			log.Infof("output file: %s", fileName)
 			err = os.WriteFile(fileName, []byte(j), 0644)
 			if err != nil {
@@ -190,14 +228,14 @@ func Start(ctx context.Context, cancel context.CancelFunc) {
 			}
 		case jsonOut:
 			log.Info("output type: json")
-			baseOutput(poc)
+			baseOutput(resultList)
 			var j string
-			j, err = NewResultJson(poc)
+			j, err = NewResultJson(resultList)
 			if err != nil {
 				checkError(err)
 				return
 			}
-			fileName := fmt.Sprintf("%s-%d.json", poc.Name, time.Now().UnixMilli())
+			fileName := fmt.Sprintf("%s-%d.json", "result-json", time.Now().UnixMilli())
 			log.Infof("output file: %s", fileName)
 			err = os.WriteFile(fileName, []byte(j), 0644)
 			if err != nil {

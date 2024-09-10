@@ -79,7 +79,10 @@ const baseTemplate = `<!DOCTYPE html>
     </style>
 </head>
 <body>
+<div class="container">
+<h1>POC-Runner Vulnerability Report</h1>
 %s
+</div>
 <script>
     function toggleRules(headerElement) {
         const rules = headerElement.nextElementSibling;
@@ -93,18 +96,15 @@ const baseTemplate = `<!DOCTYPE html>
 </body>
 </html>`
 
-const dataTemplate = `<div class="container">
-    <h1>POC-Runner Vulnerability Report</h1>
-    <div class="report-item">
-        <div class="report-header" onclick="toggleRules(this)">
-            <h2>%s</h2>
-            <span>Target: %s</span>
-            <span>Time: %s</span>
-        </div>
-        <div class="rules">
-            %s
-        </div>
-    </div>
+const dataTemplate = `<div class="report-item">
+	<div class="report-header" onclick="toggleRules(this)">
+		<h2>%s</h2>
+		<span>Target: %s</span>
+		<span>Time: %s</span>
+	</div>
+	<div class="rules">
+		%s
+	</div>
 </div>`
 
 const ruleTemplate = `<div class="rule-item">

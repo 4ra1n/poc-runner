@@ -57,6 +57,7 @@ func (c *HTTPClient) buildReqRaw(req *Request) []byte {
 	// FIX FINAL PATH
 	finalPath = strings.TrimLeft(finalPath, "/")
 	finalPath = "/" + finalPath
+	req.Path = finalPath
 
 	buf.WriteString(req.Method + space + finalPath + space + version + lineSep)
 

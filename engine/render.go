@@ -27,23 +27,26 @@ import (
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
-func BuildHTMLReport(result *Result) (string, error) {
-	var rulesHtml string
-	for k, v := range result.Details {
-		req, err := base64.StdEncoding.DecodeString(v.Req)
-		if err != nil {
-			return "", xerr.Wrap(err)
+func BuildHTMLReport(result []*Result) (string, error) {
+	var dataHtml string
+	for _, r := range result {
+		var rulesHtml string
+		for k, v := range r.Details {
+			req, err := base64.StdEncoding.DecodeString(v.Req)
+			if err != nil {
+				return "", xerr.Wrap(err)
+			}
+			resp, err := base64.StdEncoding.DecodeString(v.Resp)
+
+			reqStr := html.EscapeString(string(req))
+			respStr := html.EscapeString(string(resp))
+
+			ruleHtml := fmt.Sprintf(ruleTemplate, k, reqStr, respStr, v.Result)
+			rulesHtml += ruleHtml
 		}
-		resp, err := base64.StdEncoding.DecodeString(v.Resp)
-
-		reqStr := html.EscapeString(string(req))
-		respStr := html.EscapeString(string(resp))
-
-		ruleHtml := fmt.Sprintf(ruleTemplate, k, reqStr, respStr, v.Result)
-		rulesHtml += ruleHtml
+		t := time.Now().Format("2006-01-02 15:04:05")
+		dataHtml += fmt.Sprintf(dataTemplate, r.PocName, r.Target, t, rulesHtml)
 	}
-	t := time.Now().Format("2006-01-02 15:04:05")
-	dataHtml := fmt.Sprintf(dataTemplate, result.PocName, result.Target, t, rulesHtml)
 	allHtml := fmt.Sprintf(baseTemplate, dataHtml)
 	return allHtml, nil
 }

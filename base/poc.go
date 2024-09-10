@@ -35,9 +35,8 @@ type POC struct {
 	Target string
 	Name   string
 	// 目前仅支持 HTTP
-	Transport string
-	Set       *Map[string, *Expr]
-	// PAYLOAD 暂未实现
+	Transport  string
+	Set        *Map[string, *Expr]
 	Payload    *Payload
 	Rules      *Map[string, *Rule]
 	Expression *Expr

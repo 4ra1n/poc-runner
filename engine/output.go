@@ -70,50 +70,64 @@ func newResultInternal(poc *base.POC) *Result {
 	return result
 }
 
-func NewResultJson(poc *base.POC) (string, error) {
-	res := newResultInternal(poc)
-	data, err := json.Marshal(res)
-	if err != nil {
-		return "", xerr.Wrap(err)
+func NewResultJson(pocList *base.List[*base.POC]) (string, error) {
+	jsonList := &strings.Builder{}
+	for _, poc := range pocList.Items() {
+		res := newResultInternal(poc)
+		data, err := json.Marshal(res)
+		if err != nil {
+			return "", xerr.Wrap(err)
+		}
+		jsonList.WriteString(string(data))
+		jsonList.WriteString("\n")
 	}
-	return string(data), nil
+	return jsonList.String(), nil
 }
 
-func NewResultTxt(poc *base.POC) (string, error) {
-	res := newResultInternal(poc)
+func NewResultTxt(pocList *base.List[*base.POC]) (string, error) {
 	buf := &strings.Builder{}
-	buf.WriteString(poc.Name)
-	buf.WriteString("\n")
-	buf.WriteString(poc.Target)
-	buf.WriteString("\n")
-	for k, v := range res.Details {
-		buf.WriteString("rule:")
-		buf.WriteString(k)
+	for _, poc := range pocList.Items() {
+		res := newResultInternal(poc)
+		buf.WriteString(poc.Name)
 		buf.WriteString("\n")
-		buf.WriteString("request:")
+		buf.WriteString(poc.Target)
 		buf.WriteString("\n")
-		buf.WriteString(v.Req)
-		buf.WriteString("\n")
-		buf.WriteString("response:")
-		buf.WriteString("\n")
-		buf.WriteString(v.Resp)
+		for k, v := range res.Details {
+			buf.WriteString("rule:")
+			buf.WriteString(k)
+			buf.WriteString("\n")
+			buf.WriteString("request:")
+			buf.WriteString("\n")
+			buf.WriteString(v.Req)
+			buf.WriteString("\n")
+			buf.WriteString("response:")
+			buf.WriteString("\n")
+			buf.WriteString(v.Resp)
+			buf.WriteString("\n")
+		}
 		buf.WriteString("\n")
 	}
 	return buf.String(), nil
 }
 
-func NewResultHTML(poc *base.POC) (string, error) {
-	res := newResultInternal(poc)
-	data, err := BuildHTMLReport(res)
+func NewResultHTML(pocList *base.List[*base.POC]) (string, error) {
+	var dataList []*Result
+	for _, poc := range pocList.Items() {
+		res := newResultInternal(poc)
+		dataList = append(dataList, res)
+	}
+	data, err := BuildHTMLReport(dataList)
 	if err != nil {
 		return "", xerr.Wrap(err)
 	}
 	return data, nil
 }
 
-func baseOutput(poc *base.POC) {
+func baseOutput(pocList *base.List[*base.POC]) {
 	log.RedPrintln("#################### FOUND VULNERABILITY ####################")
-	log.RedPrintln("POC    -> ", poc.Name)
-	log.RedPrintln("TARGET -> ", poc.Target)
-	log.RedPrintln("#############################################################")
+	for _, poc := range pocList.Items() {
+		log.RedPrintln("POC    -> ", poc.Name)
+		log.RedPrintln("TARGET -> ", poc.Target)
+		log.RedPrintln("#############################################################")
+	}
 }
