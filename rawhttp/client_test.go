@@ -82,17 +82,3 @@ func TestRawHttpsProxy(t *testing.T) {
 		fmt.Println("HTTP Response:\n", string(response.RawResponse))
 	}
 }
-
-func TestRawHttpTE(t *testing.T) {
-	client, _ := NewHTTPClient(5*time.Second, DefaultNoProxy)
-	req, err := NewRequest("http://127.0.0.1:8081", MethodGet)
-	if err != nil {
-		panic(err)
-	}
-	response, err := client.DoReq(req)
-	if err != nil {
-		panic(err)
-	} else {
-		fmt.Println("HTTP Response:\n", string(response.RawResponse))
-	}
-}
