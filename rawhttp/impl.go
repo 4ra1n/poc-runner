@@ -129,7 +129,7 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 
 	if c.Debug {
 		log.BluePrintln("------------------- REQUEST DEBUG -------------------")
-		log.BluePrintln(string(buildReq))
+		log.YellowPrintln(formatMessage(buildReq))
 		log.BluePrintln("-----------------------------------------------------")
 	}
 
@@ -185,7 +185,7 @@ func (c *HTTPClient) DoReq(req *Request) (*Response, error) {
 
 	if c.Debug {
 		log.BluePrintln("------------------- RESPONSE DEBUG -------------------")
-		log.BluePrintln(string(resp.RawResponse))
+		log.YellowPrintln(formatMessage(resp.RawResponse))
 		log.BluePrintln("-----------------------------------------------------")
 	}
 
