@@ -49,11 +49,6 @@ func randomUUID() string {
 	return fmt.Sprintf("%08x-%04x-%04x-%04x-%012x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:])
 }
 
-func randomPick(choices []string) string {
-	randomIndex := rand.Intn(len(choices))
-	return choices[randomIndex]
-}
-
 func randUpper(n int) string {
 	letterRunes := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	b := make([]rune, n)

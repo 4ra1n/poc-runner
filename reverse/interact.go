@@ -22,12 +22,15 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/log"
+	"github.com/4ra1n/poc-runner/util"
 	"github.com/4ra1n/poc-runner/xerr"
 )
 
@@ -75,7 +78,55 @@ type Interact struct {
 
 func NewInteract(c *client.HttpClient, server string) (*Interact, error) {
 	if server == "" {
-		server = randomPick(defaultServers)
+		// 随机选取一个 default server
+		picker := util.NewPicker(defaultServers)
+
+		var (
+			ok       bool
+			tryTimes int
+		)
+
+		for {
+			tryTimes++
+
+			if tryTimes > 5 {
+				return nil, xerr.Wrap(errors.New("cannot connect to interact.sh server"))
+			}
+
+			server, ok = picker.RandomPick()
+			if !ok {
+				// 只有所有的 server 被选完没得选才会返回 false
+				return nil, xerr.Wrap(errors.New("all default server is invalid"))
+			}
+
+			var (
+				httpErr  error
+				httpsErr error
+			)
+
+			// 并发测试 http/https 只要有一个可用即可
+			wg := new(sync.WaitGroup)
+
+			wg.Add(2)
+
+			go func() {
+				defer wg.Done()
+				_, httpErr = c.Get("http://" + server)
+			}()
+
+			go func() {
+				defer wg.Done()
+				_, httpsErr = c.Get("https://" + server)
+			}()
+
+			wg.Wait()
+
+			// 任何一个不报错就使用它
+			if httpErr == nil || httpsErr == nil {
+				log.Infof("use reverse server: %s", server)
+				break
+			}
+		}
 	}
 	correlationID := randLower(20)
 	secretKey := randomUUID()
