@@ -19,14 +19,32 @@
 package api
 
 import (
-	_ "github.com/4ra1n/poc-runner/base"
-	_ "github.com/4ra1n/poc-runner/client"
-	_ "github.com/4ra1n/poc-runner/engine"
-	_ "github.com/4ra1n/poc-runner/expression"
-	_ "github.com/4ra1n/poc-runner/log"
-	_ "github.com/4ra1n/poc-runner/proxy"
-	_ "github.com/4ra1n/poc-runner/rawhttp"
-	_ "github.com/4ra1n/poc-runner/reverse"
-	_ "github.com/4ra1n/poc-runner/util"
-	_ "github.com/4ra1n/poc-runner/xerr"
+	"context"
+	"fmt"
+	"testing"
+	"time"
+
+	"github.com/4ra1n/poc-runner/log"
 )
+
+func TestAdvanceAPI(t *testing.T) {
+	ctx := context.Background()
+	// NEW ADVANCE POC RUNNER
+	runner, err := NewPocRunnerEx(
+		ctx,                        // CONTEXT
+		"socks5://127.0.0.1:10808", // SOCKS PROXY
+		time.Second*10,             // TIMEOUT
+		true,                       // DEBUG MODE
+		"dnslog.cn",                // REVERSE CONFIG (dnslog.cn | interact.sh)
+		log.DebugLevel,             // LOG LEVEL
+	)
+	if err != nil {
+		return
+	}
+	// RUN POC
+	report, err := runner.Run([]byte(poc), "https://example.com")
+	if err != nil {
+		return
+	}
+	fmt.Println(report)
+}

@@ -122,6 +122,32 @@ func main() {
 }
 ```
 
+Advance Example
+
+```go
+func main() {
+	ctx := context.Background()
+	// NEW ADVANCE POC RUNNER
+	runner, err := NewPocRunnerEx(
+		ctx,                        // CONTEXT
+		"socks5://127.0.0.1:10808", // SOCKS PROXY
+		time.Second*10,             // TIMEOUT
+		true,                       // DEBUG MODE
+		"dnslog.cn",                // REVERSE CONFIG (dnslog.cn | interact.sh)
+		log.DebugLevel,             // LOG LEVEL
+	)
+	if err != nil {
+		return
+	}
+	// RUN POC
+	report, err := runner.Run([]byte(poc), "https://example.com")
+	if err != nil {
+		return
+	}
+	fmt.Println(report)
+}
+```
+
 ## BUILD
 
 WINDOWS: 参考 `build.bat`

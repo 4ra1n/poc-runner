@@ -26,40 +26,58 @@ import (
 	"github.com/4ra1n/poc-runner/base"
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/engine"
+	"github.com/4ra1n/poc-runner/log"
 	"github.com/4ra1n/poc-runner/rawhttp"
+	"github.com/4ra1n/poc-runner/reverse"
 )
 
 type PocRunner struct {
-	ctx     context.Context
-	client  *client.HttpClient
-	proxy   string
-	timeout time.Duration
-	debug   bool
+	ctx         context.Context
+	client      *client.HttpClient
+	proxy       string
+	timeout     time.Duration
+	reverseType string
+	logLevel    int
+	debug       bool
 }
 
 func NewPocRunner(ctx context.Context) (*PocRunner, error) {
-	return NewPocRunnerEx(ctx, rawhttp.DefaultNoProxy, rawhttp.DefaultTimeout, false)
+	return NewPocRunnerEx(
+		ctx,
+		rawhttp.DefaultNoProxy,
+		rawhttp.DefaultTimeout,
+		false,
+		"dnslog.cn",
+		log.InfoLevel,
+	)
 }
 
 func NewPocRunnerEx(
 	ctx context.Context,
 	proxy string,
 	timeout time.Duration,
-	debug bool) (*PocRunner, error) {
+	debug bool,
+	reverseType string,
+	logLevel int,
+) (*PocRunner, error) {
+	log.SetLevel(logLevel)
 	c, err := client.NewHttpClient(proxy, timeout, debug)
 	if err != nil {
 		return nil, err
 	}
 	return &PocRunner{
-		client:  c,
-		ctx:     ctx,
-		proxy:   proxy,
-		timeout: timeout,
-		debug:   debug,
+		client:      c,
+		ctx:         ctx,
+		proxy:       proxy,
+		timeout:     timeout,
+		debug:       debug,
+		reverseType: reverseType,
+		logLevel:    logLevel,
 	}, nil
 }
 
 func (p *PocRunner) Run(input []byte, target string) (string, error) {
+	reverse.Type = p.reverseType
 	poc, err := engine.InitYamlPoCFromBytes(p.ctx, p.client, input)
 	pocList := base.NewList[*base.POC]()
 	pocList.Add(poc)
