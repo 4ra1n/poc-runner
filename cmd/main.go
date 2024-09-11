@@ -25,7 +25,6 @@ import (
 	"os/signal"
 	"strings"
 	"syscall"
-	"time"
 
 	"github.com/4ra1n/poc-runner/engine"
 	"github.com/4ra1n/poc-runner/log"
@@ -71,13 +70,9 @@ func checkUpdate() {
 	if version == "UNKNOWN" {
 		return
 	}
-	// new raw http client
-	client := &rawhttp.HTTPClient{
-		Timeout:      3 * time.Second,
-		ProxyAddr:    rawhttp.DefaultNoProxy,
-		Debug:        false,
-		MaxRedirects: 5,
-	}
+	// use default raw http client
+	client := rawhttp.DirectShortTimeoutClient
+	// check update
 	resp, err := client.Get(updateUrl)
 	if err != nil {
 		log.Warn("check update error")

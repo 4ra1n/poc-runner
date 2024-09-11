@@ -19,13 +19,17 @@
 package base
 
 import (
+	"context"
+
 	"github.com/4ra1n/poc-runner/client"
 	"github.com/4ra1n/poc-runner/expression"
+	"github.com/4ra1n/poc-runner/xerr"
 )
 
 // POC
 // XRAY 的 POC 总结构体
 type POC struct {
+	Ctx context.Context
 	// 这是 EXPRESSION 的环境
 	Env *expression.Environment
 	// 当前 POC 需要保存的信息
@@ -42,6 +46,28 @@ type POC struct {
 	Expression *Expr
 	// DETAIL 暂未实现
 	Detail *Map[string, string]
+}
+
+func (p *POC) Clone() (*POC, error) {
+	newEnv := expression.NewEnvironment(p.Ctx, nil)
+	newCtx, err := NewPocContext(p.Context.Client)
+	if err != nil {
+		return nil, xerr.Wrap(err)
+	}
+	return &POC{
+		Ctx:        p.Ctx,
+		Env:        newEnv,
+		Context:    newCtx,
+		Caches:     p.Caches,
+		Target:     "", // NONE TARGET
+		Name:       p.Name,
+		Transport:  p.Transport,
+		Set:        p.Set,
+		Payload:    p.Payload,
+		Rules:      p.Rules,
+		Expression: p.Expression,
+		Detail:     p.Detail,
+	}, nil
 }
 
 func (p *POC) DoReq(req *client.TheRequest) (*client.TheResponse, error) {

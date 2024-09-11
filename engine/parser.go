@@ -32,7 +32,11 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func ParseYAMLInput(ctx context.Context, c *client.HttpClient, data []byte) (*base.POC, error) {
+func InitYamlPoCFromBytes(
+	ctx context.Context,
+	c *client.HttpClient,
+	data []byte,
+) (*base.POC, error) {
 	var object interface{}
 	err := yaml.Unmarshal(data, &object)
 	if err != nil {
@@ -45,7 +49,7 @@ func ParseYAMLInput(ctx context.Context, c *client.HttpClient, data []byte) (*ba
 	return parse(ctx, c, root)
 }
 
-func ParseYAMLFile(ctx context.Context, c *client.HttpClient, s string) (*base.POC, error) {
+func InitYamlPoC(s string) (map[string]interface{}, error) {
 	data, err := os.ReadFile(s)
 	if err != nil {
 		return nil, xerr.Wrap(err)
@@ -59,12 +63,22 @@ func ParseYAMLFile(ctx context.Context, c *client.HttpClient, s string) (*base.P
 	if !ok {
 		return nil, xerr.Wrap(errors.New("yaml is not a map"))
 	}
-	return parse(ctx, c, root)
+	return root, nil
+}
+
+func InitYamlPoCFromInterface(
+	ctx context.Context,
+	c *client.HttpClient,
+	object map[string]interface{},
+) (*base.POC, error) {
+	return parse(ctx, c, object)
 }
 
 func parse(ctx context.Context, c *client.HttpClient, root map[string]interface{}) (*base.POC, error) {
 	var err error
-	poc := &base.POC{}
+	poc := &base.POC{
+		Ctx: ctx,
+	}
 	poc.Env = expression.NewEnvironment(ctx, nil)
 	poc.Context, err = base.NewPocContext(c)
 	if err != nil {

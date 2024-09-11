@@ -60,7 +60,9 @@ func NewPocRunnerEx(
 }
 
 func (p *PocRunner) Run(input []byte, target string) (string, error) {
-	poc, err := engine.ParseYAMLInput(p.ctx, p.client, input)
+	poc, err := engine.InitYamlPoCFromBytes(p.ctx, p.client, input)
+	pocList := base.NewList[*base.POC]()
+	pocList.Add(poc)
 	globalCache := base.NewGlobalCache()
 	poc.Caches = globalCache
 	if err != nil {
@@ -71,7 +73,7 @@ func (p *PocRunner) Run(input []byte, target string) (string, error) {
 		return "", err
 	}
 	if success {
-		return engine.NewResultJson(poc)
+		return engine.NewResultJson(pocList)
 	} else {
 		return "", errors.New("no result")
 	}
