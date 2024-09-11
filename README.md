@@ -195,6 +195,7 @@ builtin function
 | urldecode       | bytes\|string  | string | 0.0.1           |
 | get404Path      | null           | string | 0.0.1           |
 | newReverse      | null           | object | 0.0.1           |
+| print           | object         | bool   | 0.1.0           |
 
 reverse variables
 

@@ -78,4 +78,5 @@ var builtin = map[string]EFunction{
 	}},
 	"get404Path": &eFunctionGet404Path{},
 	"newReverse": &eFunctionNewReverse{},
+	"print":      &eFunctionPrint{},
 }
