@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: set version
         run: |
-          echo "VERSION=0.1.1" >> $GITHUB_ENV
+          echo "VERSION=0.1.2" >> $GITHUB_ENV
           NOW=$(date +"%Y/%m/%d/%H/%M")
           echo "NOW=$NOW" >> $GITHUB_ENV
       - uses: actions/checkout@v4
