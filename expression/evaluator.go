@@ -261,7 +261,15 @@ func (e *evaluator) visitMultiplicativeExpressionContext(c *MultiplicativeExpres
 func (e *evaluator) visitEqualityExpressionContext(c *EqualityExpressionContext) any {
 	left := e.Visit(c.ExpressionSingle(0))
 	right := e.Visit(c.ExpressionSingle(1))
-	return EBool(reflect.DeepEqual(left, right))
+
+	// FIX BUG FOR NOT EQUAL
+	switch {
+	case c.EQUAL() != nil:
+		return EBool(reflect.DeepEqual(left, right))
+	case c.NOTEQUAL() != nil:
+		return !EBool(reflect.DeepEqual(left, right))
+	}
+	panic("unreached code")
 }
 
 func (e *evaluator) visitLogicalAndExpressionContext(c *LogicalAndExpressionContext) any {

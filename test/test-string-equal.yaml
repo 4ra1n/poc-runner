@@ -1,0 +1,10 @@
+name: poc-yaml-test-string-equal
+transport: http
+rules:
+  r0:
+    request:
+      method: GET
+      path: /test
+    expression: |
+      response.status == 404 && response.headers["Content-Type"] != ""
+expression: r0()
